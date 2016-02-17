@@ -1,0 +1,5 @@
+<resources>
+	<string name="app_name">Flickr</string>
+
+	<string name="act_main_progress_dialog_message">Downloading photos...</string>
+</resources>
