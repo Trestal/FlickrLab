@@ -8,6 +8,8 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.lab.flickr.R;
+
 /**
  * Created by Matt on 18/02/2016.
  */
@@ -26,7 +28,7 @@ public class FragMain extends Fragment {
 	@Nullable
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-		return super.onCreateView(inflater, container, savedInstanceState);
+		return inflater.inflate(R.layout.frag_main, container, false);
 	}
 
 	@Override

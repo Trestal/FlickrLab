@@ -2,4 +2,10 @@
 	<string name="app_name">Flickr</string>
 
 	<string name="act_main_progress_dialog_message">Downloading photos...</string>
+
+	<string name="frag_json_loader_url">https://api.flickr.com/services/feeds/photos_public.gne?format=json&amp;nojsoncallback=1</string>
+
+	<string name="frag_main_tag">FragMainTag</string>
+
+	<string name="frag_json_loader_tag">FragJsonLoaderTag</string>
 </resources>
