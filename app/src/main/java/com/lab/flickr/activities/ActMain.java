@@ -19,7 +19,6 @@ import android.util.Log;
 import android.widget.Toast;
 
 import com.lab.flickr.R;
-import com.lab.flickr.Util.BundleUtils;
 import com.lab.flickr.Util.FileUtils;
 import com.lab.flickr.Util.Security;
 import com.lab.flickr.fragments.FragImageLoader;
@@ -61,7 +60,6 @@ public class ActMain extends Activity implements DialogInterface.OnDismissListen
 		setContentView(R.layout.act_main);
 		//TODO actionbar
 		// Load all the bitmaps and save to file if this activity hasn't been loaded yet
-		LocalBroadcastManager.getInstance(this).registerReceiver(loadNewImageReceiver, new IntentFilter(LOAD_NEW_IMAGE));
 		if (savedInstanceState == null) {
 			startDownload();
 		}
@@ -69,19 +67,19 @@ public class ActMain extends Activity implements DialogInterface.OnDismissListen
 
 	@Override
 	public void onDismiss(DialogInterface dialog) {
+		cleanUp();
 		setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_SENSOR);
 		Fragment mainFragment = new FragMain();
-		FragmentManager fm = getFragmentManager();
-		fm.beginTransaction().add(R.id.act_main_container, mainFragment, getString(R.string.frag_main_tag)).commit();
+		if (!mainFragment.isVisible()) {
+			FragmentManager fm = getFragmentManager();
+			fm.beginTransaction().add(R.id.act_main_container, mainFragment, getString(R.string.frag_main_tag)).commit();
+		}
 	}
 
 	@Override
 	protected void onDestroy() {
 		super.onDestroy();
-		if (progressDialog != null && progressDialog.isShowing()) {
-
-		}
-		//TODO unregister receives, cancel AsyncTasks
+		cleanUp();
 	}
 
 	@Override
@@ -119,27 +117,16 @@ public class ActMain extends Activity implements DialogInterface.OnDismissListen
 		if (isNetworkAvailable()) {
 			if (urlLoadQueue.isEmpty() || reloadUrlsTrigger) {
 				FragmentManager fm = getFragmentManager();
-				FragmentTransaction ft = fm.beginTransaction();
-				FragJsonLoader jsonLoader = (FragJsonLoader) fm.findFragmentByTag(getString(R.string.frag_json_loader_tag));
-				if (jsonLoader != null) {
-					jsonLoader.cancel(true);
-					ft.remove(jsonLoader);
-				}
-				FragImageLoader imageLoader = (FragImageLoader) fm.findFragmentByTag(getString(R.string.frag_image_loader_tag));
-				if (imageLoader != null) {
-					imageLoader.cancel(true);
-					ft.remove(imageLoader);
-				}
 				Fragment fragMain = fm.findFragmentByTag(getString(R.string.frag_main_tag));
 				if(fragMain != null) {
-					ft.remove(fragMain);
+					fm.beginTransaction().remove(fragMain).commit();
 				}
-				ft.commit();
 				urlLoadQueue.clear();
 				FileUtils.deleteDirectoryContents(getFilesDir().getAbsolutePath() + FileUtils.INTERNAL_PATH);
 				//Need to destroy the main fragment view, clear the queue, remove and stop any loading tasks and start it again with a new progress dialog
 				loadJson();
 			}
+			LocalBroadcastManager.getInstance(this).registerReceiver(loadNewImageReceiver, new IntentFilter(LOAD_NEW_IMAGE));
 			//Prevent screen rotation while the processDialog is up. This is reset in onDismiss®
 			setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_NOSENSOR);
 			progressDialog = new ProgressDialog(this);
@@ -152,6 +139,34 @@ public class ActMain extends Activity implements DialogInterface.OnDismissListen
 			progressDialog.show();
 		} else {
 			Toast.makeText(this, "Network not available. Please check connection", Toast.LENGTH_SHORT).show();
+		}
+	}
+
+	/**
+	 * Destroy async fragments
+	 * Unregister receivers
+	 */
+	private void cleanUp() {
+		LocalBroadcastManager.getInstance(this).unregisterReceiver(loadNewImageReceiver);
+		if (progressDialog != null && progressDialog.isShowing()) {
+			progressDialog.dismiss();
+		}
+		try {
+			FragmentManager fm = getFragmentManager();
+			FragmentTransaction ft = fm.beginTransaction();
+			FragJsonLoader jsonLoader = (FragJsonLoader) fm.findFragmentByTag(getString(R.string.frag_json_loader_tag));
+			if (jsonLoader != null) {
+				jsonLoader.cancel(true);
+				ft.remove(jsonLoader);
+			}
+			FragImageLoader imageLoader = (FragImageLoader) fm.findFragmentByTag(getString(R.string.frag_image_loader_tag));
+			if (imageLoader != null) {
+				imageLoader.cancel(true);
+				ft.remove(imageLoader);
+			}
+			ft.commit();
+		} catch (IllegalStateException e) {
+			Log.d("ActMain", "cleanUp() : IllegalStateException : Called FragmentTransaction commit() after onSavedInstanceState");
 		}
 	}
 
