@@ -11,12 +11,17 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.pm.ActivityInfo;
+import android.graphics.Color;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.Bundle;
 import android.support.v4.content.LocalBroadcastManager;
 import android.util.Log;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.widget.Toast;
+import android.widget.Toolbar;
 
 import com.lab.flickr.R;
 import com.lab.flickr.Util.FileUtils;
@@ -40,9 +45,9 @@ public class ActMain extends Activity implements DialogInterface.OnDismissListen
 	private static final String LOAD_NEW_IMAGE = "LOAD_NEW_IMAGE";
 
 	private ProgressDialog progressDialog;
+	private Toolbar toolbar;
 
 	private Bundle urlLoadQueue = new Bundle(); //Remains empty if there are no new urls to load
-	private boolean reloadUrlsTrigger = false;
 
 	private BroadcastReceiver loadNewImageReceiver =  new BroadcastReceiver() {
 
@@ -58,11 +63,30 @@ public class ActMain extends Activity implements DialogInterface.OnDismissListen
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.act_main);
-		//TODO actionbar
+		initiateToolbar();
 		// Load all the bitmaps and save to file if this activity hasn't been loaded yet
 		if (savedInstanceState == null) {
 			startDownload();
 		}
+	}
+
+	@Override
+	public boolean onCreateOptionsMenu(Menu menu) {
+		getMenuInflater().inflate(R.menu.toolbar, menu);
+		return super.onCreateOptionsMenu(menu);
+	}
+
+	@Override
+	public boolean onOptionsItemSelected(MenuItem item) {
+		boolean consume = false;
+		switch (item.getItemId()) {
+			case R.id.toolbar_refresh : {
+				cleanUp();
+				startDownload();
+				consume = true;
+			}
+		}
+		return consume;
 	}
 
 	@Override
@@ -113,19 +137,24 @@ public class ActMain extends Activity implements DialogInterface.OnDismissListen
 		}
 	}
 
+	private void initiateToolbar() {
+		toolbar = (Toolbar) findViewById(R.id.act_main_toolbar);
+		toolbar.setBackgroundColor(Color.DKGRAY);
+//		toolbar.inflateMenu(R.menu.toolbar);
+		setActionBar(toolbar);
+	}
+
 	public void startDownload () {
 		if (isNetworkAvailable()) {
-			if (urlLoadQueue.isEmpty() || reloadUrlsTrigger) {
-				FragmentManager fm = getFragmentManager();
-				Fragment fragMain = fm.findFragmentByTag(getString(R.string.frag_main_tag));
-				if(fragMain != null) {
-					fm.beginTransaction().remove(fragMain).commit();
-				}
-				urlLoadQueue.clear();
-				FileUtils.deleteDirectoryContents(getFilesDir().getAbsolutePath() + FileUtils.INTERNAL_PATH);
-				//Need to destroy the main fragment view, clear the queue, remove and stop any loading tasks and start it again with a new progress dialog
-				loadJson();
+			FragmentManager fm = getFragmentManager();
+			Fragment fragMain = fm.findFragmentByTag(getString(R.string.frag_main_tag));
+			if(fragMain != null) {
+				fm.beginTransaction().remove(fragMain).commit();
 			}
+			urlLoadQueue.clear();
+			FileUtils.deleteDirectoryContents(getFilesDir().getAbsolutePath() + FileUtils.INTERNAL_PATH);
+			//Need to destroy the main fragment view, clear the queue, remove and stop any loading tasks and start it again with a new progress dialog
+			loadJson();
 			LocalBroadcastManager.getInstance(this).registerReceiver(loadNewImageReceiver, new IntentFilter(LOAD_NEW_IMAGE));
 			//Prevent screen rotation while the processDialog is up. This is reset in onDismiss®
 			setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_NOSENSOR);

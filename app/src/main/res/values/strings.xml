@@ -1,5 +1,5 @@
 <resources>
-	<string name="app_name">Flickr</string>
+	<string name="app_name">Flickr Viewer</string>
 
 	<string name="act_main_progress_dialog_message">Downloading photos...</string>
 
@@ -9,4 +9,5 @@
 
 	<string name="frag_json_loader_tag">FragJsonLoaderTag</string>
 	<string name="frag_image_loader_tag">FragImageLoaderTag</string>
+	<string name="toolbar_refresh_title">ToolbarRefreshIcon</string>
 </resources>

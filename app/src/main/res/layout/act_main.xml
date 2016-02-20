@@ -5,5 +5,9 @@
 			  android:layout_width="match_parent"
 			  android:layout_height="match_parent">
 
+	<Toolbar
+		android:id="@+id/act_main_toolbar"
+		android:layout_width="match_parent"
+		android:layout_height="wrap_content" />
 
 </LinearLayout>
