@@ -17,6 +17,10 @@ public abstract class FragLoader extends Fragment {
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setRetainInstance(true);
+		Bundle bundle = this.getArguments();
+		if (bundle != null) {
+			this.dataWrapper = bundle.getParcelable(DataWrapper.PARCEL_KEY);
+		}
 	}
 
 	@Override

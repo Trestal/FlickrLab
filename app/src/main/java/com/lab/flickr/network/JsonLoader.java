@@ -62,4 +62,9 @@ public class JsonLoader extends AsyncTask<String, Void, JSONObject> {
 		}
 		return null;
 	}
+
+	@Override
+	protected void onCancelled() {
+		listener = null;
+	}
 }
