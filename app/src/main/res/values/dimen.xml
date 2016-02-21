@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-	<dimen name="frag_main_scrollViewThickness">96dp</dimen>
+	<dimen name="frag_main_recyclerViewThickness">96dp</dimen>
+	<dimen name="frag_main_recyclerViewContainer">104dp</dimen>
 </resources>

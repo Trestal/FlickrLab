@@ -7,7 +7,7 @@
 	<android.support.v7.widget.RecyclerView
 		android:id="@+id/frag_main_recyclerView"
 		android:layout_width="match_parent"
-		android:layout_height="@dimen/frag_main_scrollViewThickness"
+		android:layout_height="@dimen/frag_main_recyclerViewThickness"
 		android:layout_alignParentBottom="true"
 		android:scrollbars="horizontal"
 		android:scrollbarStyle="insideInset"/>

@@ -6,7 +6,7 @@
 
 	<android.support.v7.widget.RecyclerView
 		android:id="@+id/frag_main_recyclerView"
-		android:layout_width="@dimen/frag_main_scrollViewThickness"
+		android:layout_width="@dimen/frag_main_recyclerViewThickness"
 		android:layout_height="match_parent"
 		android:layout_alignParentRight="true"
 		android:scrollbars="vertical"

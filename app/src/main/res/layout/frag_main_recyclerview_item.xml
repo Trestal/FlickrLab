@@ -1,13 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-		android:orientation="vertical"
-		android:layout_width="wrap_content"
-		android:layout_height="wrap_content"
-		android:padding="5dp">
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+		android:id="@+id/frag_main_recyclerView_container"
+		android:layout_width="@dimen/frag_main_recyclerViewContainer"
+		android:layout_height="@dimen/frag_main_recyclerViewContainer"
+		android:background="@drawable/image_glow">
 
-	<ImageView
-		android:id="@+id/frag_main_recyclerView_imageView"
-		android:layout_width="@dimen/frag_main_scrollViewThickness"
-		android:layout_height="@dimen/frag_main_scrollViewThickness"/>
+		<ImageView
+			android:id="@+id/frag_main_recyclerView_imageView"
+			android:layout_width="@dimen/frag_main_recyclerViewThickness"
+			android:layout_height="@dimen/frag_main_recyclerViewThickness"
+			android:layout_centerInParent="true"/>
 
-</LinearLayout>
+</RelativeLayout>

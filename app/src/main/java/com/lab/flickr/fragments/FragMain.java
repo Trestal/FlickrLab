@@ -102,6 +102,25 @@ public class FragMain extends Fragment implements ViewPager.OnPageChangeListener
 		} else if (rotation == Surface.ROTATION_90 || rotation == Surface.ROTATION_270) { //land
 			verticalScroll(position);
 		}
+		for (int i = 0, ii = recyclerViewAdapter.getItemCount(); i < ii; i++) {
+			RecyclerView.ViewHolder holder = recyclerView.findViewHolderForItemId(recyclerViewAdapter.getItemId(i));
+			if (holder instanceof RecyclerViewAdapter.RecyclerViewHolder) {
+				if (i == position) {
+					((RecyclerViewAdapter.RecyclerViewHolder) holder).getViewHolderContainer().setBackground(getResources().getDrawable(R.drawable.image_glow, null));
+				}
+					((RecyclerViewAdapter.RecyclerViewHolder) holder).getViewHolderContainer().setBackground(null);
+			}
+		}
+
+
+//		View view = recyclerView.getChildAt(position);
+//		if (view != null) {
+//			RecyclerView.ViewHolder holder = recyclerView.getChildViewHolder(view);
+//			if (holder instanceof RecyclerViewAdapter.RecyclerViewHolder) {
+//				RecyclerViewAdapter.RecyclerViewHolder vh = (RecyclerViewAdapter.RecyclerViewHolder) holder;
+//				vh.setBackgroundVisible();
+//			}
+//		}
 	}
 
 	private void verticalScroll(int position) {

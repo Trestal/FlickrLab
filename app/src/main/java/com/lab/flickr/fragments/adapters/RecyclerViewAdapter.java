@@ -2,6 +2,7 @@ package com.lab.flickr.fragments.adapters;
 
 import android.graphics.Bitmap;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -44,11 +45,13 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
 
 	public class RecyclerViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
 
+		private View container;
 		private ImageView imageView;
 		private RecyclerViewOnItemClickListener listener;
 
 		public RecyclerViewHolder(View itemView, RecyclerViewOnItemClickListener listener) {
 			super(itemView);
+			this.container = itemView;
 			this.imageView = (ImageView) itemView.findViewById(R.id.frag_main_recyclerView_imageView);
 			this.listener = listener;
 			this.imageView.setOnClickListener(this);
@@ -61,6 +64,10 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
 		@Override
 		public void onClick(View v) {
 			this.listener.onClick(v, getAdapterPosition());
+		}
+
+		public View getViewHolderContainer() {
+			return this.container;
 		}
 	}
 }
