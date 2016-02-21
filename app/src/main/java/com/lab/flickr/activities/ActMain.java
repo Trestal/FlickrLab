@@ -11,19 +11,18 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.pm.ActivityInfo;
-import android.content.res.Configuration;
-import android.graphics.Color;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.Bundle;
 import android.support.v4.content.LocalBroadcastManager;
+import android.support.v7.app.ActionBarActivity;
+import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.Menu;
-import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.Surface;
 import android.widget.Toast;
-import android.widget.Toolbar;
 
 import com.lab.flickr.R;
 import com.lab.flickr.Util.FileUtils;
@@ -42,7 +41,7 @@ import org.json.JSONObject;
 /**
  * Created by Matt on 18/02/2016.
  */
-public class ActMain extends Activity implements DialogInterface.OnDismissListener, JsonLoader.JsonLoaderListener, ImageLoader.ImageLoaderListener {
+public class ActMain extends AppCompatActivity implements DialogInterface.OnDismissListener, JsonLoader.JsonLoaderListener, ImageLoader.ImageLoaderListener {
 
 	private static final String LOAD_NEW_IMAGE = "LOAD_NEW_IMAGE";
 
@@ -110,7 +109,6 @@ public class ActMain extends Activity implements DialogInterface.OnDismissListen
 
 	@Override
 	public void onRequestFinished(JSONObject jsonObject) {
-		Log.d("ActMain", "onRequestFinished - Retrieved jsonObject. Is null ? : " + (jsonObject == null));
 		FragmentManager fm = getFragmentManager();
 		fm.beginTransaction().remove(fm.findFragmentByTag(getResources().getString(R.string.frag_json_loader_tag))).commit();
 		extractImageUrls(jsonObject);
@@ -120,7 +118,6 @@ public class ActMain extends Activity implements DialogInterface.OnDismissListen
 
 	@Override
 	public void onRequestFinished(DataWrapper dataWrapper) {
-		Log.d("ActMain", "onRequestFinished : Datawrapper is null ? " + (dataWrapper == null));
 		if (dataWrapper != null && dataWrapper.getBitmap() != null) {
 			urlLoadQueue.remove(dataWrapper.getUrl());
 			int progress = progressDialog.getMax() - urlLoadQueue.size();
@@ -142,8 +139,7 @@ public class ActMain extends Activity implements DialogInterface.OnDismissListen
 	private void initiateToolbar() {
 		toolbar = (Toolbar) findViewById(R.id.act_main_toolbar);
 		toolbar.setBackgroundColor(getResources().getColor(R.color.toolbar));
-//		toolbar.inflateMenu(R.menu.toolbar);
-		setActionBar(toolbar);
+		setSupportActionBar(toolbar);
 	}
 
 	public void startDownload () {

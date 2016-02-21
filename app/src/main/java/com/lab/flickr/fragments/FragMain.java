@@ -126,30 +126,6 @@ public class FragMain extends Fragment implements ViewPager.OnPageChangeListener
 		}
 	}
 
-	private void stack() {
-
-
-
-
-
-
-
-
-
-//		int pos = recyclerLayoutManager.findFirstVisibleItemPosition();
-//		int outer = (recyclerLayoutManager.findLastVisibleItemPosition() + 1) / 2;
-//		int delta = pos + outer - (recyclerViewAdapter.getItemCount() / 2) ;
-//		View firstChild = recyclerView.getChildAt(0);
-//		if (firstChild != null) {
-//			int rotation = getActivity().getWindowManager().getDefaultDisplay().getRotation();
-//			if (rotation == Surface.ROTATION_0 || rotation == Surface.ROTATION_180) { //port
-//				recyclerView.smoothScrollBy(firstChild.getWidth() * -delta, 0);
-//			} else if (rotation == Surface.ROTATION_90 || rotation == Surface.ROTATION_270) { //land
-//				recyclerView.smoothScrollBy(0, firstChild.getWidth() * -delta);
-//			}
-//		}
-	}
-
 	@Override
 	public void onPageScrollStateChanged(int state) {
 
