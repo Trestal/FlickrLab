@@ -41,8 +41,8 @@ public class FileUtils {
 		}
 	}
 
-	public static Bitmap loadBitmapFromFile(Context context, String fileName) {
-		String filePath = context.getFilesDir().getAbsolutePath() + INTERNAL_PATH + fileName;
+	//TODO add checking for filepath and extension for image types (png, jpg etc)
+	public static Bitmap loadBitmapFromFile(Context context, String filePath) {
 		File file = new File(filePath);
 		if(file.exists()) {
 			return BitmapFactory.decodeFile(filePath);

@@ -11,6 +11,7 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.pm.ActivityInfo;
+import android.content.res.Configuration;
 import android.graphics.Color;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
@@ -20,6 +21,7 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
+import android.view.Surface;
 import android.widget.Toast;
 import android.widget.Toolbar;
 
@@ -157,7 +159,16 @@ public class ActMain extends Activity implements DialogInterface.OnDismissListen
 			loadJson();
 			LocalBroadcastManager.getInstance(this).registerReceiver(loadNewImageReceiver, new IntentFilter(LOAD_NEW_IMAGE));
 			//Prevent screen rotation while the processDialog is up. This is reset in onDismiss®
-			setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_NOSENSOR);
+			int rotation = getWindowManager().getDefaultDisplay().getRotation();
+			if (rotation == Surface.ROTATION_0) {
+				setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
+			} else if (rotation == Surface.ROTATION_90) {
+				setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
+			} else if (rotation == Surface.ROTATION_270) {
+				setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_REVERSE_LANDSCAPE);
+			} else if (rotation == Surface.ROTATION_180) {
+				setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_REVERSE_PORTRAIT);
+			}
 			progressDialog = new ProgressDialog(this);
 			progressDialog.setCanceledOnTouchOutside(false);
 			progressDialog.setMessage(getString(R.string.act_main_progress_dialog_message));
@@ -167,7 +178,7 @@ public class ActMain extends Activity implements DialogInterface.OnDismissListen
 			progressDialog.setProgress(0);
 			progressDialog.show();
 		} else {
-			Toast.makeText(this, "Network not available. Please check connection", Toast.LENGTH_SHORT).show();
+			Toast.makeText(this, getString(R.string.act_main_no_network), Toast.LENGTH_SHORT).show();
 		}
 	}
 

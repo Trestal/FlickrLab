@@ -2,12 +2,14 @@
 	<string name="app_name">Flickr Viewer</string>
 
 	<string name="act_main_progress_dialog_message">Downloading photos...</string>
-
-	<string name="frag_json_loader_url">https://api.flickr.com/services/feeds/photos_public.gne?format=json&amp;nojsoncallback=1</string>
+	<string name="act_main_no_network">Network not available. Please check connection</string>
 
 	<string name="frag_main_tag">FragMainTag</string>
 
 	<string name="frag_json_loader_tag">FragJsonLoaderTag</string>
+
+	<string name="frag_json_loader_url">https://api.flickr.com/services/feeds/photos_public.gne?format=json&amp;nojsoncallback=1</string>
 	<string name="frag_image_loader_tag">FragImageLoaderTag</string>
+
 	<string name="toolbar_refresh_title">ToolbarRefreshIcon</string>
 </resources>
