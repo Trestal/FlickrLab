@@ -5,26 +5,30 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 
 import com.lab.flickr.R;
+import com.lab.flickr.fragments.interfaces.RecyclerViewOnItemClickListener;
 
 import java.util.ArrayList;
 
 /**
  * Created by Matt on 20/02/2016.
  */
-public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewHolder> {
+public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapter.RecyclerViewHolder> {
 
 	private ArrayList<Bitmap> bitmaps = new ArrayList<>();
+	private RecyclerViewOnItemClickListener recyclerViewOnItemClickListener;
 
-	public RecyclerViewAdapter(ArrayList<Bitmap> data) {
+	public RecyclerViewAdapter(ArrayList<Bitmap> data, RecyclerViewOnItemClickListener recyclerViewOnItemClickListener) {
 		this.bitmaps = data;
+		this.recyclerViewOnItemClickListener = recyclerViewOnItemClickListener;
 	}
 
 	@Override
 	public RecyclerViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
 		View container = LayoutInflater.from(parent.getContext()).inflate(R.layout.frag_main_recyclerview_item, parent, false);
-		RecyclerViewHolder holder = new RecyclerViewHolder(container);
+		RecyclerViewHolder holder = new RecyclerViewHolder(container, recyclerViewOnItemClickListener);
 		return holder;
 	}
 
@@ -36,5 +40,27 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewHolder
 	@Override
 	public int getItemCount() {
 		return bitmaps.size();
+	}
+
+	public class RecyclerViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
+
+		private ImageView imageView;
+		private RecyclerViewOnItemClickListener listener;
+
+		public RecyclerViewHolder(View itemView, RecyclerViewOnItemClickListener listener) {
+			super(itemView);
+			this.imageView = (ImageView) itemView.findViewById(R.id.frag_main_recyclerView_imageView);
+			this.listener = listener;
+			this.imageView.setOnClickListener(this);
+		}
+
+		public ImageView getImageView() {
+			return imageView;
+		}
+
+		@Override
+		public void onClick(View v) {
+			this.listener.onClick(v, getAdapterPosition());
+		}
 	}
 }

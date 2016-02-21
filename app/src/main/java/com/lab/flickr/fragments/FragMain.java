@@ -1,12 +1,9 @@
 package com.lab.flickr.fragments;
 
 import android.app.Fragment;
-import android.content.Context;
-import android.content.pm.ActivityInfo;
 import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
-import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -21,20 +18,20 @@ import com.lab.flickr.R;
 import com.lab.flickr.Util.FileUtils;
 import com.lab.flickr.fragments.adapters.GalleryPagerAdapter;
 import com.lab.flickr.fragments.adapters.RecyclerViewAdapter;
+import com.lab.flickr.fragments.interfaces.RecyclerViewOnItemClickListener;
 
 import java.io.File;
 import java.util.ArrayList;
 
-/**
- * Created by Matt on 18/02/2016.
- */
-public class FragMain extends Fragment implements ViewPager.OnPageChangeListener {
+public class FragMain extends Fragment implements ViewPager.OnPageChangeListener, RecyclerViewOnItemClickListener {
 
 	private ViewPager viewPager;
 	private RecyclerView recyclerView;
 
 	private GalleryPagerAdapter galleryPagerAdapter;
 	private RecyclerViewAdapter recyclerViewAdapter;
+
+	private LinearLayoutManager recyclerLayoutManager;
 
 	private ArrayList<Bitmap> data = new ArrayList<>();
 
@@ -71,14 +68,15 @@ public class FragMain extends Fragment implements ViewPager.OnPageChangeListener
 		galleryPagerAdapter = new GalleryPagerAdapter(getActivity(), data);
 		viewPager.setAdapter(galleryPagerAdapter);
 		viewPager.addOnPageChangeListener(this);
-		recyclerViewAdapter = new RecyclerViewAdapter(data);
+		recyclerViewAdapter = new RecyclerViewAdapter(data, this);
 		recyclerView.setAdapter(recyclerViewAdapter);
 		int rotation = getActivity().getWindowManager().getDefaultDisplay().getRotation();
 		if (rotation == Surface.ROTATION_0 || rotation == Surface.ROTATION_180) {
-			recyclerView.setLayoutManager(new LinearLayoutManager(getActivity(), LinearLayoutManager.HORIZONTAL, false));
+			recyclerLayoutManager = new LinearLayoutManager(getActivity(), LinearLayoutManager.HORIZONTAL, false);
 		} else if (rotation == Surface.ROTATION_90 || rotation == Surface.ROTATION_270) {
-			recyclerView.setLayoutManager(new LinearLayoutManager(getActivity(), LinearLayoutManager.VERTICAL, false));
+			recyclerLayoutManager = new LinearLayoutManager(getActivity(), LinearLayoutManager.VERTICAL, false);
 		}
+		recyclerView.setLayoutManager(recyclerLayoutManager);
 	}
 
 	@Override
@@ -92,22 +90,73 @@ public class FragMain extends Fragment implements ViewPager.OnPageChangeListener
 	}
 
 	@Override
-	public boolean onOptionsItemSelected(MenuItem item) {
-		return super.onOptionsItemSelected(item);
-	}
-
-	@Override
 	public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
 
 	}
 
 	@Override
 	public void onPageSelected(int position) {
+		int rotation = getActivity().getWindowManager().getDefaultDisplay().getRotation();
+		if (rotation == Surface.ROTATION_0 || rotation == Surface.ROTATION_180) { //port
+			horizontalScroll(position);
+		} else if (rotation == Surface.ROTATION_90 || rotation == Surface.ROTATION_270) { //land
+			verticalScroll(position);
+		}
+	}
 
+	private void verticalScroll(int position) {
+		View view = recyclerView.getChildAt(0); //Only used to get the width of a view. They are all the same so this is safe
+		if (view != null) {
+			int width = view.getHeight();
+			float pos = recyclerView.computeVerticalScrollOffset();
+			float targetPos = position * width;
+			float delta = (pos - targetPos) * -1;
+			recyclerView.smoothScrollBy(0, (int) delta);
+		}
+	}
+
+	private void horizontalScroll(int position) {
+		View view = recyclerView.getChildAt(0); //Only used to get the width of a view. They are all the same so this is safe
+		if (view != null) {
+			int width = view.getWidth();
+			float pos = recyclerView.computeHorizontalScrollOffset();
+			float targetPos = position * width;
+			float delta = (pos - targetPos) * -1;
+			recyclerView.smoothScrollBy((int) delta, 0);
+		}
+	}
+
+	private void stack() {
+
+
+
+
+
+
+
+
+
+//		int pos = recyclerLayoutManager.findFirstVisibleItemPosition();
+//		int outer = (recyclerLayoutManager.findLastVisibleItemPosition() + 1) / 2;
+//		int delta = pos + outer - (recyclerViewAdapter.getItemCount() / 2) ;
+//		View firstChild = recyclerView.getChildAt(0);
+//		if (firstChild != null) {
+//			int rotation = getActivity().getWindowManager().getDefaultDisplay().getRotation();
+//			if (rotation == Surface.ROTATION_0 || rotation == Surface.ROTATION_180) { //port
+//				recyclerView.smoothScrollBy(firstChild.getWidth() * -delta, 0);
+//			} else if (rotation == Surface.ROTATION_90 || rotation == Surface.ROTATION_270) { //land
+//				recyclerView.smoothScrollBy(0, firstChild.getWidth() * -delta);
+//			}
+//		}
 	}
 
 	@Override
 	public void onPageScrollStateChanged(int state) {
 
+	}
+
+	@Override
+	public void onClick(View view, int position) {
+		viewPager.setCurrentItem(position);
 	}
 }

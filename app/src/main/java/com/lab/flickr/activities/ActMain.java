@@ -141,7 +141,7 @@ public class ActMain extends Activity implements DialogInterface.OnDismissListen
 
 	private void initiateToolbar() {
 		toolbar = (Toolbar) findViewById(R.id.act_main_toolbar);
-		toolbar.setBackgroundColor(Color.DKGRAY);
+		toolbar.setBackgroundColor(getResources().getColor(R.color.toolbar));
 //		toolbar.inflateMenu(R.menu.toolbar);
 		setActionBar(toolbar);
 	}
