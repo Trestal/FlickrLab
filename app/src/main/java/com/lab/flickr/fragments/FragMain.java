@@ -2,7 +2,6 @@ package com.lab.flickr.fragments;
 
 import android.app.Fragment;
 import android.graphics.Bitmap;
-import android.graphics.Color;
 import android.graphics.drawable.GradientDrawable;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -11,7 +10,6 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
-import android.view.MenuItem;
 import android.view.Surface;
 import android.view.View;
 import android.view.ViewGroup;
@@ -25,7 +23,9 @@ import com.lab.flickr.fragments.interfaces.RecyclerViewOnItemClickListener;
 import java.io.File;
 import java.util.ArrayList;
 
-public class FragMain extends Fragment implements ViewPager.OnPageChangeListener, RecyclerViewOnItemClickListener {
+import static android.support.v7.widget.RecyclerView.*;
+
+public class FragMain extends Fragment implements ViewPager.OnPageChangeListener, RecyclerViewOnItemClickListener, OnChildAttachStateChangeListener {
 
 	private ViewPager viewPager;
 	private RecyclerView recyclerView;
@@ -36,6 +36,9 @@ public class FragMain extends Fragment implements ViewPager.OnPageChangeListener
 	private LinearLayoutManager recyclerLayoutManager;
 
 	private ArrayList<Bitmap> data = new ArrayList<>();
+
+	private int currentItemPos = 0;
+	private int previousItemPos = 0;
 
 	@Override
 	public void onSaveInstanceState(Bundle outState) {
@@ -73,6 +76,7 @@ public class FragMain extends Fragment implements ViewPager.OnPageChangeListener
 		recyclerViewAdapter = new RecyclerViewAdapter(data, this);
 		recyclerViewAdapter.setHasStableIds(true);
 		recyclerView.setAdapter(recyclerViewAdapter);
+		recyclerView.addOnChildAttachStateChangeListener(this);
 		int rotation = getActivity().getWindowManager().getDefaultDisplay().getRotation();
 		if (rotation == Surface.ROTATION_0 || rotation == Surface.ROTATION_180) {
 			recyclerLayoutManager = new LinearLayoutManager(getActivity(), LinearLayoutManager.HORIZONTAL, false);
@@ -99,26 +103,37 @@ public class FragMain extends Fragment implements ViewPager.OnPageChangeListener
 
 	@Override
 	public void onPageSelected(int position) {
+		previousItemPos = currentItemPos;
+		currentItemPos = position;
 		int rotation = getActivity().getWindowManager().getDefaultDisplay().getRotation();
 		if (rotation == Surface.ROTATION_0 || rotation == Surface.ROTATION_180) { //port
 			horizontalScroll(position);
 		} else if (rotation == Surface.ROTATION_90 || rotation == Surface.ROTATION_270) { //land
 			verticalScroll(position);
 		}
-		for (int i = 0, ii = recyclerViewAdapter.getItemCount(); i < ii; i++) {
-			RecyclerView.ViewHolder holder = recyclerView.findViewHolderForItemId(recyclerViewAdapter.getItemId(i));
-			if (holder instanceof RecyclerViewAdapter.RecyclerViewHolder) {
-				if (i == position) {
-					Log.d("FragMain","position : " + position + " set to RED");
-					GradientDrawable border = new GradientDrawable();
-					border.setColor(0xFFFFFFFF); //white background
-					border.setStroke(5, 0xFFFF0000); //Red border with full opacity
-					((RecyclerViewAdapter.RecyclerViewHolder) holder).getViewHolderContainer().setBackground(border);
-				} else {
-					((RecyclerViewAdapter.RecyclerViewHolder) holder).getViewHolderContainer().setBackground(null);
-				}
-			}
+		changeItem(currentItemPos, previousItemPos);
+	}
+
+	@Override
+	public void onPageScrollStateChanged(int state) {
+	}
+
+	@Override
+	public void onClick(View view, int position) {
+		viewPager.setCurrentItem(position);
+	}
+
+	@Override
+	public void onChildViewAttachedToWindow(View view) {
+		int childPosition = recyclerView.getChildAdapterPosition(view);
+		if (childPosition == currentItemPos) {
+			highlightItem(view);
 		}
+	}
+
+	@Override
+	public void onChildViewDetachedFromWindow(View view) {
+		view.setBackground(null);
 	}
 
 	private int verticalScroll(int position) {
@@ -147,13 +162,25 @@ public class FragMain extends Fragment implements ViewPager.OnPageChangeListener
 		return 0;
 	}
 
-	@Override
-	public void onPageScrollStateChanged(int state) {
-
+	private void changeItem(int newItem, int oldItem) {
+		ViewHolder holder = recyclerView.findViewHolderForItemId(recyclerViewAdapter.getItemId(newItem));
+		if (holder instanceof RecyclerViewAdapter.RecyclerViewHolder) {
+			highlightItem(((RecyclerViewAdapter.RecyclerViewHolder) holder).getViewHolderContainer());
+		}
+		ViewHolder oldHolder = recyclerView.findViewHolderForItemId(recyclerViewAdapter.getItemId(oldItem));
+		if (oldHolder instanceof RecyclerViewAdapter.RecyclerViewHolder) {
+			unHighlightItem(((RecyclerViewAdapter.RecyclerViewHolder) oldHolder).getViewHolderContainer());
+		}
 	}
 
-	@Override
-	public void onClick(View view, int position) {
-		viewPager.setCurrentItem(position);
+	private void highlightItem(View view) {
+		GradientDrawable border = new GradientDrawable();
+		border.setColor(0xFFFFFFFF); //white background
+		border.setStroke(5, 0xFFFF0000); //Red border with full opacity
+		view.setBackground(border);
+	}
+
+	private void unHighlightItem(View view) {
+		view.setBackground(null);
 	}
 }
