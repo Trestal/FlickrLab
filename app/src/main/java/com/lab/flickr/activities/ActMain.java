@@ -1,6 +1,5 @@
 package com.lab.flickr.activities;
 
-import android.app.Activity;
 import android.app.Fragment;
 import android.app.FragmentManager;
 import android.app.FragmentTransaction;
@@ -15,7 +14,6 @@ import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.Bundle;
 import android.support.v4.content.LocalBroadcastManager;
-import android.support.v7.app.ActionBarActivity;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
@@ -50,7 +48,7 @@ public class ActMain extends AppCompatActivity implements DialogInterface.OnDism
 
 	private Bundle urlLoadQueue = new Bundle(); //Remains empty if there are no new urls to load
 
-	private BroadcastReceiver loadNewImageReceiver =  new BroadcastReceiver() {
+	private BroadcastReceiver loadNewImageReceiver = new BroadcastReceiver() {
 
 		@Override
 		public void onReceive(Context context, Intent intent) {
@@ -81,7 +79,7 @@ public class ActMain extends AppCompatActivity implements DialogInterface.OnDism
 	public boolean onOptionsItemSelected(MenuItem item) {
 		boolean consume = false;
 		switch (item.getItemId()) {
-			case R.id.toolbar_refresh : {
+			case R.id.toolbar_refresh: {
 				cleanUp();
 				startDownload();
 				consume = true;
@@ -111,7 +109,7 @@ public class ActMain extends AppCompatActivity implements DialogInterface.OnDism
 	public void onRequestFinished(JSONObject jsonObject) {
 		FragmentManager fm = getFragmentManager();
 		fm.beginTransaction().remove(fm.findFragmentByTag(getResources().getString(R.string.frag_json_loader_tag))).commit();
-		extractImageUrls(jsonObject);
+		populateLoadQueue(jsonObject);
 		progressDialog.setMax(urlLoadQueue.size());
 		loadImage();
 	}
@@ -142,11 +140,11 @@ public class ActMain extends AppCompatActivity implements DialogInterface.OnDism
 		setSupportActionBar(toolbar);
 	}
 
-	public void startDownload () {
+	public void startDownload() {
 		if (isNetworkAvailable()) {
 			FragmentManager fm = getFragmentManager();
 			Fragment fragMain = fm.findFragmentByTag(getString(R.string.frag_main_tag));
-			if(fragMain != null) {
+			if (fragMain != null) {
 				fm.beginTransaction().remove(fragMain).commit();
 			}
 			urlLoadQueue.clear();
@@ -236,10 +234,10 @@ public class ActMain extends AppCompatActivity implements DialogInterface.OnDism
 		ft.commit();
 	}
 
-	private void extractImageUrls(JSONObject jsonObject) {
+	private void populateLoadQueue(JSONObject jsonObject) {
 		try {
 			JSONArray items = jsonObject.getJSONArray("items");
-			Log.d("ActMain","extractImageUrls - Number of images added to queue : " + items.length());
+			Log.d("ActMain", "populateLoadQueue - Number of images added to queue : " + items.length());
 			for (int i = 0, ii = items.length(); i < ii; i++) {
 				String url = items.getJSONObject(i).getJSONObject("media").getString("m");
 				url = url.replace("m.jpg", "c.jpg"); //Retrieve higher resolution image

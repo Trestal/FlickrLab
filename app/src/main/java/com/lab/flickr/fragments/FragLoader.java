@@ -30,6 +30,8 @@ public abstract class FragLoader extends Fragment {
 	}
 
 	public abstract void setLoaderListener(LoaderListener listener);
+
 	public abstract void cancel(boolean interrupt);
+
 	public abstract void performLoadingTask(DataWrapper wrapper);
 }

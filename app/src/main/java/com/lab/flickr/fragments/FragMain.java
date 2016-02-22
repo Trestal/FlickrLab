@@ -23,14 +23,14 @@ import com.lab.flickr.fragments.interfaces.RecyclerViewOnItemClickListener;
 import java.io.File;
 import java.util.ArrayList;
 
-import static android.support.v7.widget.RecyclerView.*;
+import static android.support.v7.widget.RecyclerView.OnChildAttachStateChangeListener;
+import static android.support.v7.widget.RecyclerView.ViewHolder;
 
 public class FragMain extends Fragment implements ViewPager.OnPageChangeListener, RecyclerViewOnItemClickListener, OnChildAttachStateChangeListener {
 
 	private ViewPager viewPager;
 	private RecyclerView recyclerView;
 
-	private GalleryPagerAdapter galleryPagerAdapter;
 	private RecyclerViewAdapter recyclerViewAdapter;
 
 	private LinearLayoutManager recyclerLayoutManager;
@@ -38,12 +38,6 @@ public class FragMain extends Fragment implements ViewPager.OnPageChangeListener
 	private ArrayList<Bitmap> data = new ArrayList<>();
 
 	private int currentItemPos = 0;
-	private int previousItemPos = 0;
-
-	@Override
-	public void onSaveInstanceState(Bundle outState) {
-		super.onSaveInstanceState(outState);
-	}
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -68,11 +62,12 @@ public class FragMain extends Fragment implements ViewPager.OnPageChangeListener
 	@Override
 	public void onViewCreated(View view, Bundle savedInstanceState) {
 		super.onViewCreated(view, savedInstanceState);
-		viewPager = (ViewPager) view.findViewById(R.id.frag_main_viewPager);
+		initViewPager(view);
+		initRecyclerView(view);
+	}
+
+	private void initRecyclerView(View view) {
 		recyclerView = (RecyclerView) view.findViewById(R.id.frag_main_recyclerView);
-		galleryPagerAdapter = new GalleryPagerAdapter(getActivity(), data);
-		viewPager.setAdapter(galleryPagerAdapter);
-		viewPager.addOnPageChangeListener(this);
 		recyclerViewAdapter = new RecyclerViewAdapter(data, this);
 		recyclerViewAdapter.setHasStableIds(true);
 		recyclerView.setAdapter(recyclerViewAdapter);
@@ -86,14 +81,11 @@ public class FragMain extends Fragment implements ViewPager.OnPageChangeListener
 		recyclerView.setLayoutManager(recyclerLayoutManager);
 	}
 
-	@Override
-	public void onStart() {
-		super.onStart();
-	}
-
-	@Override
-	public void onStop() {
-		super.onStop();
+	private void initViewPager(View view) {
+		viewPager = (ViewPager) view.findViewById(R.id.frag_main_viewPager);
+		GalleryPagerAdapter galleryPagerAdapter = new GalleryPagerAdapter(getActivity(), data);
+		viewPager.setAdapter(galleryPagerAdapter);
+		viewPager.addOnPageChangeListener(this);
 	}
 
 	@Override
@@ -103,15 +95,15 @@ public class FragMain extends Fragment implements ViewPager.OnPageChangeListener
 
 	@Override
 	public void onPageSelected(int position) {
-		previousItemPos = currentItemPos;
+		int previousItemPos = currentItemPos;
 		currentItemPos = position;
 		int rotation = getActivity().getWindowManager().getDefaultDisplay().getRotation();
 		if (rotation == Surface.ROTATION_0 || rotation == Surface.ROTATION_180) { //port
-			horizontalScroll(position);
+			portraitScroll(position);
 		} else if (rotation == Surface.ROTATION_90 || rotation == Surface.ROTATION_270) { //land
-			verticalScroll(position);
+			landscapeScroll(position);
 		}
-		changeItem(currentItemPos, previousItemPos);
+		changeItem(position, previousItemPos);
 	}
 
 	@Override
@@ -136,30 +128,27 @@ public class FragMain extends Fragment implements ViewPager.OnPageChangeListener
 		view.setBackground(null);
 	}
 
-	private int verticalScroll(int position) {
-		View view = recyclerView.getChildAt(0); //Only used to get the width of a view. They are all the same so this is safe
-		if (view != null) {
-			int width = view.getHeight();
-			float pos = recyclerView.computeVerticalScrollOffset();
-			float targetPos = position * width;
-			float delta = (pos - targetPos) * -1;
-			recyclerView.smoothScrollBy(0, (int) delta);
-			return (int) targetPos;
-		}
-		return 0;
+	private void portraitScroll(int position) {
+		scroll(position, true);
 	}
 
-	private int horizontalScroll(int position) {
+	private void landscapeScroll(int position) {
+		scroll(position, false);
+	}
+
+	private void scroll(int position, boolean isPortrait) {
 		View view = recyclerView.getChildAt(0); //Only used to get the width of a view. They are all the same so this is safe
 		if (view != null) {
-			int width = view.getWidth();
-			float pos = recyclerView.computeHorizontalScrollOffset();
+			int width = isPortrait ? view.getWidth() : view.getHeight();
+			float pos = isPortrait
+					? recyclerView.computeHorizontalScrollOffset()
+					: recyclerView.computeVerticalScrollOffset();
 			float targetPos = position * width;
 			float delta = (pos - targetPos) * -1;
-			recyclerView.smoothScrollBy((int) delta, 0);
-			return (int) targetPos;
+			int x = isPortrait ? (int) delta : 0;
+			int y = isPortrait ? 0 : (int) delta;
+			recyclerView.smoothScrollBy(x, y);
 		}
-		return 0;
 	}
 
 	private void changeItem(int newItem, int oldItem) {

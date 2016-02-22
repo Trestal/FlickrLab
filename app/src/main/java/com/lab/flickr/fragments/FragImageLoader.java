@@ -1,7 +1,5 @@
 package com.lab.flickr.fragments;
 
-import android.os.AsyncTask;
-
 import com.lab.flickr.network.DataWrapper;
 import com.lab.flickr.network.ImageLoader;
 import com.lab.flickr.network.LoaderListener;
@@ -31,6 +29,6 @@ public class FragImageLoader extends FragLoader {
 
 	@Override
 	public void performLoadingTask(DataWrapper wrapper) {
-		imageLoader.execute(new DataWrapper[] {wrapper});
+		imageLoader.execute(wrapper);
 	}
 }

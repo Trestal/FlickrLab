@@ -38,11 +38,7 @@ public class GalleryPagerAdapter extends PagerAdapter {
 	@Override
 	public int getItemPosition(Object object) {
 		int index = views.indexOf(object);
-		if (index == -1) {
-			return POSITION_NONE;
-		} else {
-			return index;
-		}
+		return index == -1 ? POSITION_NONE : index;
 	}
 
 	@Override
