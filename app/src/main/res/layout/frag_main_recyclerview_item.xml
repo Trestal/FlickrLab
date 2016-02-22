@@ -2,8 +2,7 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
 		android:id="@+id/frag_main_recyclerView_container"
 		android:layout_width="@dimen/frag_main_recyclerViewContainer"
-		android:layout_height="@dimen/frag_main_recyclerViewContainer"
-		android:background="@drawable/image_glow">
+		android:layout_height="@dimen/frag_main_recyclerViewContainer">
 
 		<ImageView
 			android:id="@+id/frag_main_recyclerView_imageView"

@@ -2,6 +2,8 @@ package com.lab.flickr.fragments;
 
 import android.app.Fragment;
 import android.graphics.Bitmap;
+import android.graphics.Color;
+import android.graphics.drawable.GradientDrawable;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.view.ViewPager;
@@ -69,6 +71,7 @@ public class FragMain extends Fragment implements ViewPager.OnPageChangeListener
 		viewPager.setAdapter(galleryPagerAdapter);
 		viewPager.addOnPageChangeListener(this);
 		recyclerViewAdapter = new RecyclerViewAdapter(data, this);
+		recyclerViewAdapter.setHasStableIds(true);
 		recyclerView.setAdapter(recyclerViewAdapter);
 		int rotation = getActivity().getWindowManager().getDefaultDisplay().getRotation();
 		if (rotation == Surface.ROTATION_0 || rotation == Surface.ROTATION_180) {
@@ -106,24 +109,19 @@ public class FragMain extends Fragment implements ViewPager.OnPageChangeListener
 			RecyclerView.ViewHolder holder = recyclerView.findViewHolderForItemId(recyclerViewAdapter.getItemId(i));
 			if (holder instanceof RecyclerViewAdapter.RecyclerViewHolder) {
 				if (i == position) {
-					((RecyclerViewAdapter.RecyclerViewHolder) holder).getViewHolderContainer().setBackground(getResources().getDrawable(R.drawable.image_glow, null));
-				}
+					Log.d("FragMain","position : " + position + " set to RED");
+					GradientDrawable border = new GradientDrawable();
+					border.setColor(0xFFFFFFFF); //white background
+					border.setStroke(5, 0xFFFF0000); //Red border with full opacity
+					((RecyclerViewAdapter.RecyclerViewHolder) holder).getViewHolderContainer().setBackground(border);
+				} else {
 					((RecyclerViewAdapter.RecyclerViewHolder) holder).getViewHolderContainer().setBackground(null);
+				}
 			}
 		}
-
-
-//		View view = recyclerView.getChildAt(position);
-//		if (view != null) {
-//			RecyclerView.ViewHolder holder = recyclerView.getChildViewHolder(view);
-//			if (holder instanceof RecyclerViewAdapter.RecyclerViewHolder) {
-//				RecyclerViewAdapter.RecyclerViewHolder vh = (RecyclerViewAdapter.RecyclerViewHolder) holder;
-//				vh.setBackgroundVisible();
-//			}
-//		}
 	}
 
-	private void verticalScroll(int position) {
+	private int verticalScroll(int position) {
 		View view = recyclerView.getChildAt(0); //Only used to get the width of a view. They are all the same so this is safe
 		if (view != null) {
 			int width = view.getHeight();
@@ -131,10 +129,12 @@ public class FragMain extends Fragment implements ViewPager.OnPageChangeListener
 			float targetPos = position * width;
 			float delta = (pos - targetPos) * -1;
 			recyclerView.smoothScrollBy(0, (int) delta);
+			return (int) targetPos;
 		}
+		return 0;
 	}
 
-	private void horizontalScroll(int position) {
+	private int horizontalScroll(int position) {
 		View view = recyclerView.getChildAt(0); //Only used to get the width of a view. They are all the same so this is safe
 		if (view != null) {
 			int width = view.getWidth();
@@ -142,7 +142,9 @@ public class FragMain extends Fragment implements ViewPager.OnPageChangeListener
 			float targetPos = position * width;
 			float delta = (pos - targetPos) * -1;
 			recyclerView.smoothScrollBy((int) delta, 0);
+			return (int) targetPos;
 		}
+		return 0;
 	}
 
 	@Override

@@ -31,6 +31,7 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
 		View container = LayoutInflater.from(parent.getContext()).inflate(R.layout.frag_main_recyclerview_item, parent, false);
 		RecyclerViewHolder holder = new RecyclerViewHolder(container, recyclerViewOnItemClickListener);
 		return holder;
+
 	}
 
 	@Override
@@ -39,8 +40,18 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
 	}
 
 	@Override
+	public void registerAdapterDataObserver(RecyclerView.AdapterDataObserver observer) {
+		super.registerAdapterDataObserver(observer);
+	}
+
+	@Override
 	public int getItemCount() {
 		return bitmaps.size();
+	}
+
+	@Override
+	public long getItemId(int position) {
+		return position;
 	}
 
 	public class RecyclerViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
