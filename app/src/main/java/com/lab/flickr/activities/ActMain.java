@@ -140,7 +140,7 @@ public class ActMain extends AppCompatActivity implements DialogInterface.OnDism
 		setSupportActionBar(toolbar);
 	}
 
-	public void startDownload() {
+	private void startDownload() {
 		if (isNetworkAvailable()) {
 			FragmentManager fm = getFragmentManager();
 			Fragment fragMain = fm.findFragmentByTag(getString(R.string.frag_main_tag));
@@ -237,7 +237,6 @@ public class ActMain extends AppCompatActivity implements DialogInterface.OnDism
 	private void populateLoadQueue(JSONObject jsonObject) {
 		try {
 			JSONArray items = jsonObject.getJSONArray("items");
-			Log.d("ActMain", "populateLoadQueue - Number of images added to queue : " + items.length());
 			for (int i = 0, ii = items.length(); i < ii; i++) {
 				String url = items.getJSONObject(i).getJSONObject("media").getString("m");
 				url = url.replace("m.jpg", "c.jpg"); //Retrieve higher resolution image

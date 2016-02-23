@@ -12,9 +12,6 @@ import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
 
-/**
- * Created by Matt on 18/02/2016.
- */
 public class JsonLoader extends AsyncTask<String, Void, JSONObject> {
 
 	public interface JsonLoaderListener extends LoaderListener {
