@@ -162,7 +162,7 @@ public class FragMain extends Fragment implements ViewPager.OnPageChangeListener
 
 	private void highlightItem(View view) {
 		GradientDrawable border = new GradientDrawable();
-		border.setColor(0xFFFFFFFF); //white background
+		border.setColor(0x00FFFFFF); //transparent white background
 		border.setStroke(5, 0xFFFF0000); //Red border with full opacity
 		view.setBackground(border);
 	}
