@@ -12,9 +12,6 @@ import com.lab.flickr.fragments.interfaces.RecyclerViewOnItemClickListener;
 
 import java.util.ArrayList;
 
-/**
- * Created by Matt on 20/02/2016.
- */
 public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapter.RecyclerViewHolder> {
 
 	private ArrayList<Bitmap> bitmaps = new ArrayList<>();

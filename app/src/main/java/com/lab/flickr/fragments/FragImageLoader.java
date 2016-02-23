@@ -4,9 +4,6 @@ import com.lab.flickr.network.DataWrapper;
 import com.lab.flickr.network.ImageLoader;
 import com.lab.flickr.network.LoaderListener;
 
-/**
- * Created by Matt on 18/02/2016.
- */
 public class FragImageLoader extends FragLoader {
 
 	private ImageLoader imageLoader;

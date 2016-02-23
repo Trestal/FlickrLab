@@ -4,9 +4,6 @@ import android.graphics.Bitmap;
 import android.os.Parcel;
 import android.os.Parcelable;
 
-/**
- * Created by Matt on 18/02/2016.
- */
 public class DataWrapper implements Parcelable {
 
 	public static final String PARCEL_KEY = "DataWrapperKey";

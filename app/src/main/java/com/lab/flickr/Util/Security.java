@@ -4,9 +4,6 @@ import java.io.UnsupportedEncodingException;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 
-/**
- * Created by Matt on 19/02/2016.
- */
 public class Security {
 
 	private static final String CHAR_ENCODING = "UTF-8";

@@ -9,9 +9,6 @@ import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URL;
 
-/**
- * Created by Matt on 18/02/2016.
- */
 public class ImageLoader extends AsyncTask<DataWrapper, Integer, DataWrapper> {
 
 	public interface ImageLoaderListener extends LoaderListener {
@@ -26,14 +23,11 @@ public class ImageLoader extends AsyncTask<DataWrapper, Integer, DataWrapper> {
 
 	@Override
 	protected DataWrapper doInBackground(DataWrapper... params) {
-		Log.d("ImageLoader", "doInBackground - listener is null ? : " + (listener == null));
 		return load(params[0]);
 	}
 
 	@Override
 	protected void onPostExecute(DataWrapper dataWrapper) {
-		Log.d("ImageLoader", "onPostExecute - dataWrapper is null ? " + (dataWrapper == null));
-		Log.d("ImageLoader", "onPostExecute - listener is null ? : " + (listener == null));
 		if (listener != null) {
 			listener.onRequestFinished(dataWrapper);
 		}
@@ -49,7 +43,6 @@ public class ImageLoader extends AsyncTask<DataWrapper, Integer, DataWrapper> {
 			return wrapper;
 		}
 		try {
-			Log.d("ImageLoader", "load : url is ::: " + wrapper.getUrl());
 			URL url = new URL(wrapper.getUrl());
 			Bitmap bmp = BitmapFactory.decodeStream(url.openConnection().getInputStream());
 			wrapper.setBitmap(bmp);

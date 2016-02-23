@@ -8,7 +8,6 @@ import android.support.annotation.Nullable;
 import android.support.v4.view.ViewPager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Surface;
 import android.view.View;
@@ -44,7 +43,6 @@ public class FragMain extends Fragment implements ViewPager.OnPageChangeListener
 		super.onCreate(savedInstanceState);
 		File dir = new File(getActivity().getFilesDir().getAbsolutePath() + FileUtils.INTERNAL_PATH);
 		if (dir.exists()) {
-			Log.d("FragMain", "onCreate : number of images : " + dir.listFiles().length);
 			for (File file : dir.listFiles()) {
 				if (file.getName().contains(".jpg")) {
 					data.add(FileUtils.loadBitmapFromFile(getActivity(), file.getAbsolutePath()));

@@ -36,9 +36,6 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-/**
- * Created by Matt on 18/02/2016.
- */
 public class ActMain extends AppCompatActivity implements DialogInterface.OnDismissListener, JsonLoader.JsonLoaderListener, ImageLoader.ImageLoaderListener {
 
 	private static final String LOAD_NEW_IMAGE = "LOAD_NEW_IMAGE";
@@ -200,7 +197,7 @@ public class ActMain extends AppCompatActivity implements DialogInterface.OnDism
 			}
 			ft.commit();
 		} catch (IllegalStateException e) {
-			Log.d("ActMain", "cleanUp() : IllegalStateException : Called FragmentTransaction commit() after onSavedInstanceState");
+			Log.e("ActMain", "cleanUp() : IllegalStateException : Called FragmentTransaction commit() after onSavedInstanceState");
 		}
 	}
 
@@ -214,7 +211,6 @@ public class ActMain extends AppCompatActivity implements DialogInterface.OnDism
 		jsonLoader.setLoaderListener(this);
 		ft.add(jsonLoader, getResources().getString(R.string.frag_json_loader_tag));
 		ft.commit();
-		Log.d("ActMain", "loadJson - loader fragment created");
 	}
 
 	/**

@@ -6,9 +6,6 @@ import android.os.Bundle;
 import com.lab.flickr.network.DataWrapper;
 import com.lab.flickr.network.LoaderListener;
 
-/**
- * Created by Matt on 18/02/2016.
- */
 public abstract class FragLoader extends Fragment {
 
 	DataWrapper dataWrapper;

@@ -12,9 +12,6 @@ import com.lab.flickr.R;
 
 import java.util.ArrayList;
 
-/**
- * Created by Matt on 20/02/2016.
- */
 public class GalleryPagerAdapter extends PagerAdapter {
 
 	private ArrayList<View> views = new ArrayList<>();

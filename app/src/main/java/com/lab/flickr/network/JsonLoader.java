@@ -1,7 +1,6 @@
 package com.lab.flickr.network;
 
 import android.os.AsyncTask;
-import android.util.Log;
 
 import org.json.JSONObject;
 
@@ -31,15 +30,12 @@ public class JsonLoader extends AsyncTask<String, Void, JSONObject> {
 
 	@Override
 	protected void onPostExecute(JSONObject jsonObject) {
-		Log.d("ActMain/onPostExecute", "onPostExecute() Method - Retrieved Json. Is null ? : " + (jsonObject == null));
-		Log.d("ActMain/onPostExecute", "onPostExecute() Method - listener is null ? : " + (listener == null));
 		if (listener != null) {
 			listener.onRequestFinished(jsonObject);
 		}
 	}
 
 	private JSONObject load(String urlString) {
-		Log.d("jsonLoader/load", "load() Method - Attempting to get json");
 		try {
 			URL url = new URL(urlString);
 			HttpURLConnection conn = (HttpURLConnection) url.openConnection();

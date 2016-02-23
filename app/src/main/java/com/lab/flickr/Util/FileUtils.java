@@ -8,9 +8,6 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 
-/**
- * Created by Matt on 19/02/2016.
- */
 public class FileUtils {
 
 	public static final String INTERNAL_PATH = "/tempImages/";
