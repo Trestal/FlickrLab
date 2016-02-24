@@ -20,7 +20,7 @@ public class DataWrapper implements Parcelable {
 	public DataWrapper(Parcel in) {
 		index = in.readInt();
 		url = in.readString();
-		bitmap = in.readParcelable(Bitmap.class.getClassLoader());
+		in.readValue(Bitmap.class.getClassLoader());
 	}
 
 	public void setBitmap(Bitmap bitmap) {
