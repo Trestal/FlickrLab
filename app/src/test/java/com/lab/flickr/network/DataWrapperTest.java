@@ -16,7 +16,9 @@ public class DataWrapperTest {
 
 	@Before
 	public void setup() {
-		dataWrapper = new DataWrapper(1, "http://www.someurl.com");
+		dataWrapper = new DataWrapper();
+		dataWrapper.setValue(DataWrapper.Key.URL, "www.some.url");
+		dataWrapper.setValue(DataWrapper.Key.INDEX, 1);
 	}
 
 	@Test
@@ -27,8 +29,8 @@ public class DataWrapperTest {
 		parcel.setDataPosition(0);
 
 		DataWrapper newWrapper = DataWrapper.CREATOR.createFromParcel(parcel);
-		assertEquals(dataWrapper.getIndex(), newWrapper.getIndex());
-		assertEquals(dataWrapper.getUrl(), newWrapper.getUrl());
+		assertEquals(dataWrapper.getValue(DataWrapper.Key.URL), newWrapper.getValue(DataWrapper.Key.URL));
+		assertEquals(dataWrapper.getValue(DataWrapper.Key.INDEX), newWrapper.getValue(DataWrapper.Key.INDEX));
 
 		parcel.recycle();
 	}
