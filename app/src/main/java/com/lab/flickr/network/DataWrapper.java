@@ -1,42 +1,32 @@
 package com.lab.flickr.network;
 
-import android.graphics.Bitmap;
 import android.os.Parcel;
 import android.os.Parcelable;
 
+import java.util.HashMap;
+import java.util.Map;
+import java.util.concurrent.BlockingQueue;
+
 public class DataWrapper implements Parcelable {
 
-	public static final String PARCEL_KEY = "DataWrapperKey";
+	private Map<Key, Object> values = new HashMap<>();
 
-	private int index;
-	private String url;
-	private Bitmap bitmap;
-
-	public DataWrapper(int index, String url) {
-		this.index = index;
-		this.url = url;
-	}
+	public DataWrapper() {}
 
 	public DataWrapper(Parcel in) {
-		index = in.readInt();
-		url = in.readString();
-		in.readValue(Bitmap.class.getClassLoader());
+		this.values = in.readHashMap(HashMap.class.getClassLoader());
 	}
 
-	public void setBitmap(Bitmap bitmap) {
-		this.bitmap = bitmap;
+	public synchronized Object getValue(Key key) {
+		return values.get(key);
 	}
 
-	public int getIndex() {
-		return index;
+	public synchronized void setValue(Key key, Object object) {
+		values.put(key, object);
 	}
 
-	public String getUrl() {
-		return url;
-	}
-
-	public Bitmap getBitmap() {
-		return bitmap;
+	public synchronized boolean contains(Key key) {
+		return values.containsKey(key);
 	}
 
 	@Override
@@ -46,9 +36,7 @@ public class DataWrapper implements Parcelable {
 
 	@Override
 	public void writeToParcel(Parcel dest, int flags) {
-		dest.writeInt(index);
-		dest.writeString(url);
-		dest.writeValue(bitmap);
+		dest.writeMap(values);
 	}
 
 	public static final Parcelable.Creator<DataWrapper> CREATOR = new Parcelable.Creator<DataWrapper>() {
@@ -60,7 +48,31 @@ public class DataWrapper implements Parcelable {
 
 		@Override
 		public DataWrapper[] newArray(int size) {
-			return new DataWrapper[0];
+			return new DataWrapper[size];
 		}
 	};
+
+	/**
+	 * Contains all the keys that may be used with DataWrapper
+	 */
+	public enum Key {
+		/**
+		 * <b>Type : </b> String <br>
+		 * Used to reference the datawrapper in parcelable format
+		 */
+		PARCEL_KEY,
+		/**
+		 * <b>Type : </b> BlockingQueue<DataWrapper> <br>
+		 */
+		QUEUE,
+		URL,
+		INDEX,
+		BITMAP,
+		JSON,
+		/**
+		 * <b>Type : </b> Object <br>
+		 * Used by ImageLoader to signal finishing callbacks.
+		 */
+		POISON_PILL;
+	}
 }

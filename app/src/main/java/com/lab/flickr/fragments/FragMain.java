@@ -45,7 +45,7 @@ public class FragMain extends Fragment implements ViewPager.OnPageChangeListener
 		if (dir.exists()) {
 			for (File file : dir.listFiles()) {
 				if (file.getName().contains(".jpg")) {
-					data.add(FileUtils.loadBitmapFromFile(getActivity(), file.getAbsolutePath()));
+					data.add(FileUtils.loadBitmapFromFile(file.getAbsolutePath()));
 				}
 			}
 		}

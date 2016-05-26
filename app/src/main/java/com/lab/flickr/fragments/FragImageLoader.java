@@ -1,31 +1,59 @@
 package com.lab.flickr.fragments;
 
+import android.os.AsyncTask;
+import android.util.Log;
+
+import com.lab.flickr.Util.JobRegister;
 import com.lab.flickr.network.DataWrapper;
 import com.lab.flickr.network.ImageLoader;
-import com.lab.flickr.network.LoaderListener;
+import com.lab.flickr.network.Loader.LoaderListener;
 
 public class FragImageLoader extends FragLoader {
 
-	private ImageLoader imageLoader;
+	private static final int NUM_THREADS = Runtime.getRuntime().availableProcessors();
+//	private static final int NUM_THREADS = 2;
+
+	private ImageLoader[] imageLoaders = new ImageLoader[NUM_THREADS];
 
 	public FragImageLoader() {
-		this.imageLoader = new ImageLoader();
+		Log.d(this.getClass().getSimpleName(), "Number of threads for image loading : " + NUM_THREADS);
+		for (int i = 0; i < NUM_THREADS; i++) {
+			imageLoaders[i] = new ImageLoader(JobRegister.Job.MAIN_IMAGES);
+		}
+	}
+
+	@Override
+	public void onStart() {
+		for (ImageLoader loader : imageLoaders) {
+			loader.setContext(getActivity().getBaseContext());
+		}
+		super.onStart();
+	}
+
+	@Override
+	public void onStop() {
+		JobRegister.removeJob(JobRegister.Job.MAIN_IMAGES);
+		super.onStop();
 	}
 
 	@Override
 	public void setLoaderListener(LoaderListener listener) {
-		if (listener instanceof ImageLoader.ImageLoaderListener) {
-			imageLoader.setJsonLoaderListener((ImageLoader.ImageLoaderListener) listener);
+		for (ImageLoader loader : imageLoaders) {
+			loader.setLoaderListener(listener);
 		}
 	}
 
 	@Override
 	public void cancel(boolean interrupt) {
-		imageLoader.cancel(interrupt);
+		for (ImageLoader task : imageLoaders) {
+			task.cancel(interrupt);
+		}
 	}
 
 	@Override
 	public void performLoadingTask(DataWrapper wrapper) {
-		imageLoader.execute(wrapper);
+		for (ImageLoader task : imageLoaders) {
+			task.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, wrapper);
+		}
 	}
 }

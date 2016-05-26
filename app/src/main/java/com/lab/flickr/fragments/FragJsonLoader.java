@@ -3,7 +3,7 @@ package com.lab.flickr.fragments;
 import com.lab.flickr.R;
 import com.lab.flickr.network.DataWrapper;
 import com.lab.flickr.network.JsonLoader;
-import com.lab.flickr.network.LoaderListener;
+import com.lab.flickr.network.Loader.LoaderListener;
 
 public class FragJsonLoader extends FragLoader {
 
@@ -15,9 +15,7 @@ public class FragJsonLoader extends FragLoader {
 
 	@Override
 	public void setLoaderListener(LoaderListener listener) {
-		if (listener instanceof JsonLoader.JsonLoaderListener) {
-			jsonLoader.setJsonLoaderListener((JsonLoader.JsonLoaderListener) listener);
-		}
+		jsonLoader.setLoaderListener(listener);
 	}
 
 	@Override
@@ -27,6 +25,6 @@ public class FragJsonLoader extends FragLoader {
 
 	@Override
 	public void performLoadingTask(DataWrapper wrapper) {
-		jsonLoader.execute(getResources().getString(R.string.frag_json_loader_url));
+		jsonLoader.execute(wrapper);
 	}
 }
