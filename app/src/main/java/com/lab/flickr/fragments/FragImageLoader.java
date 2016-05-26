@@ -11,7 +11,6 @@ import com.lab.flickr.network.Loader.LoaderListener;
 public class FragImageLoader extends FragLoader {
 
 	private static final int NUM_THREADS = Runtime.getRuntime().availableProcessors();
-//	private static final int NUM_THREADS = 2;
 
 	private ImageLoader[] imageLoaders = new ImageLoader[NUM_THREADS];
 
