@@ -32,6 +32,9 @@ public class FragImageLoader extends FragLoader {
 	@Override
 	public void onStop() {
 		JobRegister.removeJob(JobRegister.Job.MAIN_IMAGES);
+		for (ImageLoader loader : imageLoaders) {
+			loader.cancel(true);
+		}
 		super.onStop();
 	}
 

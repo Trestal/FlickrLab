@@ -203,7 +203,6 @@ public class ActMain extends AppCompatActivity implements DialogInterface.OnDism
 		wrapper.setValue(DataWrapper.Key.QUEUE, queue);
 		bundle.putParcelable(DataWrapper.Key.PARCEL_KEY.name(), wrapper);
 		imageLoader.setArguments(bundle);
-
 		ft.add(imageLoader, getString(R.string.frag_image_loader_tag));
 		ft.commit();
 	}

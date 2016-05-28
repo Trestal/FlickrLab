@@ -15,6 +15,8 @@ import java.util.concurrent.TimeUnit;
 
 public class ImageLoader extends Loader {
 
+	private static final String TAG = ImageLoader.class.getSimpleName();
+
 	private boolean poisonPill = false;
 	private final Job job;
 
@@ -38,9 +40,7 @@ public class ImageLoader extends Loader {
 			try {
 				Log.d(this.getClass().getSimpleName(), "Thread : " + getID() + " Waiting for all other tasks to finish");
 				Thread.sleep(1000);
-			} catch (InterruptedException e) {
-				e.printStackTrace();
-			}
+			} catch (InterruptedException e) {}
 		}
 		return result;
 	}
@@ -66,15 +66,22 @@ public class ImageLoader extends Loader {
 	private DataWrapper load(DataWrapper wrapper) throws InterruptedException, IOException {
 		BlockingQueue<DataWrapper> queue = (BlockingQueue<DataWrapper>) wrapper.getValue(DataWrapper.Key.QUEUE);
 
-		while (!queue.isEmpty()) {
+		while (!queue.isEmpty() && !isCancelled()) {
 			DataWrapper queueItem = queue.poll(50, TimeUnit.MILLISECONDS);
 			if (queueItem != null && !isPoisonPill(queueItem)) {
 				String urlString = queueItem.getValue(DataWrapper.Key.URL).toString();
 				Log.d(this.getClass().getSimpleName(), "Thread : " + getID() + " Queue size : " + queue.size() + " URL : " + urlString);
 				URL url = new URL(urlString);
+				//TODO Add a timeout so that the app won't indefinitely hang with a bad connection
 				Bitmap bmp = BitmapFactory.decodeStream(url.openConnection().getInputStream());
-				queueItem.setValue(DataWrapper.Key.BITMAP, bmp);
-				saveBitmap(queueItem);
+				if (bmp != null) {
+					queueItem.setValue(DataWrapper.Key.BITMAP, bmp);
+					saveBitmap(queueItem);
+				} else {
+					StringBuilder err = new StringBuilder();
+					err.append("Bitmap is null. Problem loading image from url : " + urlString + "\n");
+					Log.d(TAG, err.toString());
+				}
 				publishProgress(1);
 			}
 		}
