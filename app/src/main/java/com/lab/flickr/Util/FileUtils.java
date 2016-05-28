@@ -12,6 +12,12 @@ public class FileUtils {
 	public static final String INTERNAL_PATH = "/tempImages/";
 
 	public static void saveJpegToFile(Context context, Bitmap bitmap, String fileName) {
+		if (context == null || bitmap == null || fileName == null) {
+			StringBuilder err = new StringBuilder();
+			err.append("Context, bitmap and file name must not be null.\n");
+			err.append("Is null ? Context : " + (context == null) + " bitmap : " + (bitmap == null) + " fileName : " + (fileName == null));
+			throw new IllegalArgumentException(err.toString());
+		}
 		File dir = new File(context.getFilesDir().getAbsolutePath() + INTERNAL_PATH);
 		if (!dir.exists()) {
 			if (!dir.mkdir()) {
