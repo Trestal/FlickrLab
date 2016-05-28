@@ -8,6 +8,7 @@
 			android:id="@+id/frag_main_recyclerView_imageView"
 			android:layout_width="@dimen/frag_main_recyclerViewThickness"
 			android:layout_height="@dimen/frag_main_recyclerViewThickness"
+			android:scaleType="centerCrop"
 			android:layout_centerInParent="true"/>
 
 </RelativeLayout>

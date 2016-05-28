@@ -66,6 +66,7 @@ public class FragMain extends Fragment implements ViewPager.OnPageChangeListener
 
 	private void initRecyclerView(View view) {
 		recyclerView = (RecyclerView) view.findViewById(R.id.frag_main_recyclerView);
+		//TODO Convert data to thumbnails so that each thumbnail is the same height/width
 		recyclerViewAdapter = new RecyclerViewAdapter(data, this);
 		recyclerViewAdapter.setHasStableIds(true);
 		recyclerView.setAdapter(recyclerViewAdapter);
@@ -162,8 +163,11 @@ public class FragMain extends Fragment implements ViewPager.OnPageChangeListener
 
 	private void highlightItem(View view) {
 		GradientDrawable border = new GradientDrawable();
-		border.setColor(0x00FFFFFF); //transparent white background
-		border.setStroke(5, 0xFFFF0000); //Red border with full opacity
+		int c1 = getResources().getColor(R.color.recycler_highlight);
+		int c2 = getResources().getColor(R.color.recycler_highlight_stroke);
+		int c3 = c1;
+		border.setColors(new int[] {c1, c2, c3});
+		border.setCornerRadius(10.0f);
 		view.setBackground(border);
 	}
 

@@ -6,4 +6,6 @@
 
 	<color name="galleryBackground">#EE111111</color>
 	<color name="toolbar">#FF225588</color>
+	<color name="recycler_highlight">#ff5500</color>
+	<color name="recycler_highlight_stroke">#c71414</color>
 </resources>
