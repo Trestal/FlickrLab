@@ -10,6 +10,7 @@ import com.lab.flickr.Util.JobRegister.Job;
 
 import java.io.IOException;
 import java.net.URL;
+import java.net.URLConnection;
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.TimeUnit;
 
@@ -31,9 +32,11 @@ public class ImageLoader extends Loader {
 		try {
 			result = load(params[0]);
 		} catch (InterruptedException e) {
-			Log.e(this.getClass().getSimpleName(), "Thread exception : ", e);
+			Log.e(this.getClass().getSimpleName(), "Thread exception: ", e);
 		} catch (IOException e) {
 			Log.e(this.getClass().getSimpleName(), "IOException: ", e);
+		} catch (Exception e) {
+			Log.wtf(this.getClass().getSimpleName(), "Major issue: ", e);
 		}
 		JobRegister.updateTaskState(job, getID(), true);
 		while (!JobRegister.isAllTaskComplete(job)) {
@@ -72,8 +75,9 @@ public class ImageLoader extends Loader {
 				String urlString = queueItem.getValue(DataWrapper.Key.URL).toString();
 				Log.d(this.getClass().getSimpleName(), "Thread : " + getID() + " Queue size : " + queue.size() + " URL : " + urlString);
 				URL url = new URL(urlString);
-				//TODO Add a timeout so that the app won't indefinitely hang with a bad connection
-				Bitmap bmp = BitmapFactory.decodeStream(url.openConnection().getInputStream());
+				URLConnection conn = url.openConnection();
+				conn.setConnectTimeout(10000); //timeout if image cannot be loaded in 10 seconds
+				Bitmap bmp = BitmapFactory.decodeStream(conn.getInputStream());
 				if (bmp != null) {
 					queueItem.setValue(DataWrapper.Key.BITMAP, bmp);
 					saveBitmap(queueItem);
