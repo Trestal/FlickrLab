@@ -6,6 +6,15 @@ Flickr view is an image viewer that downloads images from the Flickr API and pre
 
 The ViewPager and RecyclerView stay in sync while scrolling. Any time a new image is selected, the ViewPager updates and sets the correct position on the RecyclerView.
 
+The loading dialog may be interrupted at any time to view the images that had been downloaded up to that point.
+
+## Recent Changes 31/05/16
+1) Structural improvements to both the loading fragment and the loaders themselves. This includes creating an abstract parent (Loader) for the ImageLoader and JsonLoader classes to manage shared code.
+2) MultiThreading has been added so that multiple images can be loaded at once. The number of threads is derived from the number of available processors the loading device has. Images load much faster now. 
+3) Visual improvement to the thumbnails. Thumbnails now appear to be equal sized and cropped.
+4) Better error handling such as more meaningful messages in the event of errors. Connection timeout has also been added to the image loaders so that the process doesn't indefinitely hang with a bad connection.
+5) Highlight effect is now more pronounced
+
 ## Approach 1
 
 My initial approach tried loading the images while the user could interact with the app. I figured that this would allow te user to instantly use the app rather than wait for loading. This presented a number of issues an challenges. With my high internet speed at home, the delay in images loading was neglible but when trying it on mobile data or other Wi-Fi access points, the user was stuck seeing a blank page until the image loaded.
@@ -22,18 +31,7 @@ Essentially all GUI interaction (with the exception of the Toolbar) is handled i
 
 Instead of storing the images in memory, they are now saved to a temporary folder on disk. Each image is typically no more than a couple hundred kb so this doesn't take much space and loads quickly. It also means that handling orientation changes is much simpler. Nothing needs to be bundled up and passed to the next instance when the Fragment/Activity is reinitialised.
 
-## Improvements
-1) Parallel loading of images. Currently a UIless fragment that retains its instance is created and this runs an AsyncTask. Each time it finishes, the fragment is destroyed and a new one made since the same AsyncTask cannot have execute called again. This works fine but means we can only load 1 url at a time. So a large improvement would be to send the list of urls to the fragment and use THREAD_POOL_EXECUTOR.
+## Improvements to come
+1) Improved ImageView. Add the ability to zoom and pan on the selected image.
 
-2) Error handling. I didn't add a whole lot of error handling in.
-For instance if the Flickr API is down then the JSON AsyncTask will fail. But this won't notify the user or do anything meaningful. An improvement would be to wrap the JSONObject that the AsyncTask is returning along with a useful message. The callback would then display a message to the user if there was a problem.
-
-JSON parsing also has no error handling. There is an assumption that Flickr will provide the app with perfectly formatted JSON. Probably true most of the time but it will just cause an error and loading no images if this does happen.
-
-3) Improved ImageView. Add the ability to zoom and pan on the selected image.
-
-4) Add nicer graphic effects. Currently the selected item is simply surrounded by a red border. Adding something like a blur effect so this is not so hard would be nice
-
-5) Add more unit tests. Admittedly this is something I need to learn more of. I will continue to add more unit tests even after the submission of this project simply so I can learn more about them.
-
-6) Structure. There are a few structural changes that, while not necessary, are good practice. For instance the classes JsonLoader and ImageLoader both use much of the same methods. This could be added to an abstract class that each one extends
+2) Add nicer graphic effects. Adding something like a blur effect would be nice
