@@ -66,7 +66,6 @@ public class FragMain extends Fragment implements ViewPager.OnPageChangeListener
 
 	private void initRecyclerView(View view) {
 		recyclerView = (RecyclerView) view.findViewById(R.id.frag_main_recyclerView);
-		//TODO Convert data to thumbnails so that each thumbnail is the same height/width
 		recyclerViewAdapter = new RecyclerViewAdapter(data, this);
 		recyclerViewAdapter.setHasStableIds(true);
 		recyclerView.setAdapter(recyclerViewAdapter);
@@ -124,7 +123,7 @@ public class FragMain extends Fragment implements ViewPager.OnPageChangeListener
 
 	@Override
 	public void onChildViewDetachedFromWindow(View view) {
-		view.setBackground(null);
+		unHighlightItem(view);
 	}
 
 	private void portraitScroll(int position) {
