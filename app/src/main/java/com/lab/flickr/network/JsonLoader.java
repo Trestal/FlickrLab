@@ -26,11 +26,6 @@ public class JsonLoader extends Loader {
 	}
 
 	@Override
-	protected void onCancelled() {
-		listener = null;
-	}
-
-	@Override
 	public LoaderType getType() {
 		return LoaderType.JsonLoader;
 	}

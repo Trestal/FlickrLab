@@ -23,7 +23,6 @@ public class ImageLoader extends Loader {
 
 	public ImageLoader(Job job) {
 		this.job = job;
-		JobRegister.registerTask(job, getID());
 	}
 
 	@Override
@@ -41,16 +40,11 @@ public class ImageLoader extends Loader {
 		JobRegister.updateTaskState(job, getID(), true);
 		while (!JobRegister.isAllTaskComplete(job)) {
 			try {
-				Log.d(this.getClass().getSimpleName(), "Thread : " + getID() + " Waiting for all other tasks to finish");
+				Log.d(this.getClass().getSimpleName(), "Thread : " + getID() + " Waiting for all tasks to finish");
 				Thread.sleep(1000);
 			} catch (InterruptedException e) {}
 		}
 		return result;
-	}
-
-	@Override
-	protected void onCancelled() {
-		listener = null;
 	}
 
 	@Override

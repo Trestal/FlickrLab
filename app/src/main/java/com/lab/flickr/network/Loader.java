@@ -31,6 +31,11 @@ public abstract class Loader extends AsyncTask<DataWrapper, Integer, DataWrapper
 	}
 
 	@Override
+	protected void onCancelled() {
+		listener = null;
+	}
+
+	@Override
 	protected void onPostExecute(DataWrapper dataWrapper) {
 		listener.onRequestFinished(getType(), dataWrapper);
 	}

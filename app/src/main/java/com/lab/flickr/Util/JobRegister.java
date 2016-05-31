@@ -19,6 +19,7 @@ public class JobRegister {
 
 	public enum Job {
 		MAIN_IMAGES,
+		JSON_LOADER,
 	}
 
 	private static volatile Map<Job, JobWrapper> jobs = new HashMap<>();

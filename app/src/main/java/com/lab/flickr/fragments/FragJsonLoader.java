@@ -1,30 +1,22 @@
 package com.lab.flickr.fragments;
 
-import com.lab.flickr.R;
-import com.lab.flickr.network.DataWrapper;
+import com.lab.flickr.Util.JobRegister;
 import com.lab.flickr.network.JsonLoader;
-import com.lab.flickr.network.Loader.LoaderListener;
+import com.lab.flickr.network.Loader;
+
+import java.util.ArrayList;
 
 public class FragJsonLoader extends FragLoader {
 
-	private JsonLoader jsonLoader;
-
-	public FragJsonLoader() {
-		jsonLoader = new JsonLoader();
+	@Override
+	public ArrayList<Loader> createLoaders() {
+		ArrayList<Loader> loaders = new ArrayList<>();
+		loaders.add(new JsonLoader());
+		return loaders;
 	}
 
 	@Override
-	public void setLoaderListener(LoaderListener listener) {
-		jsonLoader.setLoaderListener(listener);
-	}
-
-	@Override
-	public void cancel(boolean interrupt) {
-		jsonLoader.cancel(interrupt);
-	}
-
-	@Override
-	public void performLoadingTask(DataWrapper wrapper) {
-		jsonLoader.execute(wrapper);
+	public JobRegister.Job getJob() {
+		return JobRegister.Job.JSON_LOADER;
 	}
 }

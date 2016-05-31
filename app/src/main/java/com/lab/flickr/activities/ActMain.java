@@ -179,7 +179,6 @@ public class ActMain extends AppCompatActivity implements DialogInterface.OnDism
 		FragmentManager fm = getFragmentManager();
 		FragmentTransaction ft = fm.beginTransaction();
 		FragJsonLoader jsonLoader = new FragJsonLoader(); //performLoadingTask is called from onStart in the fragment
-		jsonLoader.setLoaderListener(this);
 		Bundle bundle = new Bundle();
 		DataWrapper wrapper = new DataWrapper();
 		wrapper.setValue(DataWrapper.Key.URL, getResources().getString(R.string.frag_json_loader_url));
@@ -196,7 +195,6 @@ public class ActMain extends AppCompatActivity implements DialogInterface.OnDism
 		FragmentManager fm = getFragmentManager();
 		FragmentTransaction ft = fm.beginTransaction();
 		FragImageLoader imageLoader = new FragImageLoader();
-		imageLoader.setLoaderListener(this);
 
 		Bundle bundle = new Bundle();
 		DataWrapper wrapper = new DataWrapper();
