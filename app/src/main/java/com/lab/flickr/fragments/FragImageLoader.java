@@ -10,16 +10,14 @@ import java.util.ArrayList;
 
 public class FragImageLoader extends FragLoader {
 
-	private static final int NUM_THREADS = Runtime.getRuntime().availableProcessors();
+	private static final int NUM_THREADS = Math.max(Runtime.getRuntime().availableProcessors(), 1);
 
 	@Override
-	public ArrayList<Loader> createLoaders() {
+	public void createLoaders(ArrayList<Loader> loaders) {
 		Log.d(this.getClass().getSimpleName(), "Number of threads for image loading : " + NUM_THREADS);
-		ArrayList<Loader> loaders = new ArrayList<>();
 		for (int i = 0; i < NUM_THREADS; i++) {
 			loaders.add(new ImageLoader(JobRegister.Job.MAIN_IMAGES));
 		}
-		return loaders;
 	}
 
 	@Override

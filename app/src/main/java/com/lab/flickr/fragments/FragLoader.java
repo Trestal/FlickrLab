@@ -1,21 +1,19 @@
 package com.lab.flickr.fragments;
 
+import android.app.Activity;
 import android.app.Fragment;
 import android.content.Context;
 import android.os.AsyncTask;
+import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
 
 import com.lab.flickr.Util.JobRegister;
 import com.lab.flickr.network.DataWrapper;
-import com.lab.flickr.network.ImageLoader;
 import com.lab.flickr.network.Loader;
 import com.lab.flickr.network.Loader.LoaderListener;
 
 import java.util.ArrayList;
-import java.util.concurrent.Executor;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
 
 public abstract class FragLoader extends Fragment {
 
@@ -23,12 +21,28 @@ public abstract class FragLoader extends Fragment {
 
 	private DataWrapper dataWrapper;
 
-	protected ArrayList<Loader> loaders;
+	protected ArrayList<Loader> loaders = new ArrayList<>();
 
 	@Override
 	public void onAttach(Context context) {
 		super.onAttach(context);
-		loaders = createLoaders();
+		doOnAttach(context);
+	}
+
+	@SuppressWarnings("deprecation")
+	@Override
+	public void onAttach(Activity activity) {
+		super.onAttach(activity);
+		if (Build.VERSION.SDK_INT < Build.VERSION_CODES.M) {
+			doOnAttach(activity);
+		}
+	}
+
+	/**
+	 * API 21 is supported so both onAttach need to be implemented
+	 */
+	private void doOnAttach(Context context) {
+		createLoaders(loaders);
 		try {
 			for (Loader loader : loaders) {
 				loader.setLoaderListener((LoaderListener) context);
@@ -76,7 +90,7 @@ public abstract class FragLoader extends Fragment {
 		}
 	}
 
-	public abstract ArrayList<Loader> createLoaders();
+	public abstract void createLoaders(ArrayList<Loader> loaders);
 
 	public abstract JobRegister.Job getJob();
 

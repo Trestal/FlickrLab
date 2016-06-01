@@ -9,10 +9,8 @@ import java.util.ArrayList;
 public class FragJsonLoader extends FragLoader {
 
 	@Override
-	public ArrayList<Loader> createLoaders() {
-		ArrayList<Loader> loaders = new ArrayList<>();
+	public void createLoaders(ArrayList<Loader> loaders) {
 		loaders.add(new JsonLoader());
-		return loaders;
 	}
 
 	@Override
