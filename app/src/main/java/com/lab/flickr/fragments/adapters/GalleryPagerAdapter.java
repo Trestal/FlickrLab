@@ -6,11 +6,13 @@ import android.support.v4.view.PagerAdapter;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageView;
 
 import com.lab.flickr.R;
 
 import java.util.ArrayList;
+
+import it.sephiroth.android.library.imagezoom.ImageViewTouch;
+import it.sephiroth.android.library.imagezoom.ImageViewTouchBase;
 
 public class GalleryPagerAdapter extends PagerAdapter {
 
@@ -64,7 +66,8 @@ public class GalleryPagerAdapter extends PagerAdapter {
 
 	public void updateViewBitmap(Bitmap bitmap, int position) {
 		View view = views.get(position);
-		ImageView iv = (ImageView) view.findViewById(R.id.frag_main_viewpager_item_imageView);
+		ImageViewTouch iv = (ImageViewTouch) view.findViewById(R.id.frag_main_viewpager_item_imageView);
+		iv.setDisplayType(ImageViewTouchBase.DisplayType.FIT_TO_SCREEN);
 		iv.setImageBitmap(bitmap);
 	}
 }
